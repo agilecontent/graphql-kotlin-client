@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
     kotlin("jvm") version "1.2.51"
+    maven
 }
 
 group = "com.github.agilecontent"
@@ -23,6 +24,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.jvmTarget = "1.8"
 }
 kotlin {
