@@ -4,20 +4,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven'
 apply plugin: 'com.github.dcendents.android-maven'
 
-
 group = 'com.github.agilecontent'
 
 android {
     compileSdkVersion 26
-
-
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -30,10 +25,8 @@ android {
     }
 
 }
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -43,4 +36,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5"
     implementation  "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.2.51"
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }
