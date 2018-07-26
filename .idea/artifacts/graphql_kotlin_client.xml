@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="graphql-kotlin-client">
+    <output-path>$PROJECT_DIR$/out/artifacts/graphql_kotlin_client</output-path>
+    <root id="root" />
+  </artifact>
+</component>
