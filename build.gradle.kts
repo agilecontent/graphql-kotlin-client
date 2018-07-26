@@ -8,8 +8,6 @@ plugins {
 
 group = "com.github.agilecontent"
 
-version = "1.0"
-
 repositories {
     jcenter()
     mavenCentral()
