@@ -1,3 +1,5 @@
+package com.agilecontent.grapqhqlkotlin
+
 import com.google.gson.ExclusionStrategy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -7,6 +9,7 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+
 
 open class GraphQLQueryService(val url: String, val auth: String? = null) {
 

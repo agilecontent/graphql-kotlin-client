@@ -1,3 +1,5 @@
+package com.agilecontent.grapqhqlkotlin
+
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -18,15 +20,15 @@ class QueryField(val name: String, val args: Map<String, Any>? = null, val alias
     private val scalars = mutableListOf<Any>()
     private var inlineFragment: String? = null
 
-    fun on(destClass : KClass<*>, block: (QueryField.() -> Unit)? = null ){
-        field(""){
+    fun on(destClass: KClass<*>, block: (QueryField.() -> Unit)? = null) {
+        field("") {
             inlineFragment = destClass.simpleName
             block?.invoke(this)
         }
     }
 
     fun field(fieldProperty: KProperty<*>, fieldArgs: Map<String, Any>? = null, alias: String? = null, block: (QueryField.() -> Unit)? = null) =
-            field(fieldProperty.name, fieldArgs, alias,  block)
+            field(fieldProperty.name, fieldArgs, alias, block)
 
     fun field(fieldProperty: String, fieldArgs: Map<String, Any>? = null, alias: String? = null, block: (QueryField.() -> Unit)? = null) {
         if (block == null) {
