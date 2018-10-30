@@ -1,10 +1,10 @@
 package com.agilecontent.grapqhqlkotlin
 
-import com.google.gson.ExclusionStrategy
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,7 +23,7 @@ open class GraphQLQueryService(val url: String, val auth: String? = null) {
                 .post(body)
                 .url(url)
                 .build()
-        val deferred = async { client.newCall(request).execute() }
+        val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
         val response = deferred.await()
         return Gson().fromJson(response.body()?.string(), JsonObject::class.java)?.getAsJsonObject("data")
     }
