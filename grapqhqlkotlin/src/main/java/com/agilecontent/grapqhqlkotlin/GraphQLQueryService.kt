@@ -1,20 +1,21 @@
 package com.agilecontent.grapqhqlkotlin
 
+import android.content.Context
 import com.google.gson.ExclusionStrategy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import kotlinx.coroutines.experimental.async
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
+import kotlinx.coroutines.async
+import okhttp3.*
+
+import java.io.File
 
 
-open class GraphQLQueryService(val url: String, val auth: String? = null) {
+open class GraphQLQueryService(val url: String, val auth: String? = null, val context: Context) {
 
     suspend inline fun execute(query: String): JsonObject? {
-        val client = OkHttpClient()
+        val cache = Cache(File(context.cacheDir, "http-cache"), 10 * 1024 * 1024)
+        val client = OkHttpClient.Builder().addNetworkInterceptor(CacheInterceptor()).cache(cache).build()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
         val queryText = "{\"query\": \"$query\" }"
         val body = RequestBody.create(mediaType, queryText)
