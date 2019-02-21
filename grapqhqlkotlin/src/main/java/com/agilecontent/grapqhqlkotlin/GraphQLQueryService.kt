@@ -11,10 +11,10 @@ import okhttp3.*
 import java.io.File
 
 
-open class GraphQLQueryService(val url: String, val auth: String? = null, val file: File) {
+open class GraphQLQueryService(val url: String, val auth: String? = null, val filePath: String) {
 
     suspend inline fun execute(query: String): JsonObject? {
-        val cache = Cache(File(file, "http-cache"), 10 * 1024 * 1024)
+        val cache = Cache(File(filePath, "http-cache"), 10 * 1024 * 1024)
         val client = OkHttpClient.Builder().addNetworkInterceptor(CacheInterceptor()).cache(cache).build()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
         val queryText = "{\"query\": \"$query\" }"
