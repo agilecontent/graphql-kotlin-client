@@ -35,7 +35,7 @@ open class GraphQLQueryService(val url: String, val auth: String? = null, val co
         val request = Request.Builder()
                 .apply { if (auth != null) addHeader("Authorization", auth) }
                 .get()
-                .url("$url?query=$query")
+                .url("$url?query=${query.replace("\"","%22")}")
                 .build()
         val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
         val response = deferred.await()
