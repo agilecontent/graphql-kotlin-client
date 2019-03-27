@@ -36,10 +36,12 @@ open class GraphQLQueryService(val url: String, val auth: String? = null, val co
         val request = Request.Builder()
                 .apply { if (auth != null) addHeader("Authorization", auth) }
                 .get()
-                .url(HttpUrl.Builder().host(url).addQueryParameter("query",query).build())
+                .url(HttpUrl.parse(url)?.newBuilder()?.addQueryParameter("query",query)?.build()!!)
                 .build()
         val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
         val response = deferred.await()
         return Gson().fromJson(response.body()?.string(), JsonObject::class.java)?.getAsJsonObject("data")
     }
+
 }
+
