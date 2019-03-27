@@ -13,7 +13,7 @@ import java.io.File
 
 open class GraphQLQueryService(val url: String, val auth: String? = null, val context: Context) {
 
-    suspend inline fun execute(query: String): JsonObject? {
+    suspend inline fun executePost(query: String): JsonObject? {
         val cache = Cache(File(context.cacheDir, "http-cache"), 10 * 1024 * 1024)
         val client = OkHttpClient.Builder().addNetworkInterceptor(CacheInterceptor()).cache(cache).build()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
@@ -23,6 +23,19 @@ open class GraphQLQueryService(val url: String, val auth: String? = null, val co
                 .apply { if (auth != null) addHeader("Authorization", auth) }
                 .post(body)
                 .url(url)
+                .build()
+        val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
+        val response = deferred.await()
+        return Gson().fromJson(response.body()?.string(), JsonObject::class.java)?.getAsJsonObject("data")
+    }
+
+    suspend inline fun execute(query: String): JsonObject? {
+        val cache = Cache(File(context.cacheDir, "http-cache"), 10 * 1024 * 1024)
+        val client = OkHttpClient.Builder().addNetworkInterceptor(CacheInterceptor()).cache(cache).build()
+        val request = Request.Builder()
+                .apply { if (auth != null) addHeader("Authorization", auth) }
+                .get()
+                .url("$url?query=$query")
                 .build()
         val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
         val response = deferred.await()
