@@ -1,6 +1,7 @@
 package com.agilecontent.grapqhqlkotlin
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +37,7 @@ open class GraphQLQueryService(val url: String, val auth: String? = null, val co
         val request = Request.Builder()
                 .apply { if (auth != null) addHeader("Authorization", auth) }
                 .get()
-                .url(HttpUrl.parse(url)?.newBuilder()?.addQueryParameter("query",query)?.build()!!)
+                .url(HttpUrl.parse(url)?.newBuilder()?.addEncodedQueryParameter("query", URLEncoder.encode(query).replace("%5C",""))?.build()!!)
                 .build()
         val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
         val response = deferred.await()
