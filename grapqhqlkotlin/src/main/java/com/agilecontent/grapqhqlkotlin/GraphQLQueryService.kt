@@ -1,14 +1,12 @@
 package com.agilecontent.grapqhqlkotlin
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import okhttp3.*
-
 import java.io.File
 import java.net.URLEncoder
 
@@ -26,8 +24,7 @@ open class GraphQLQueryService(val url: String, val auth: String? = null, val co
                 .post(body)
                 .url(url)
                 .build()
-        val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
-        val response = deferred.await()
+        val response = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) { client.newCall(request).execute() }
         return Gson().fromJson(response.body()?.string(), JsonObject::class.java)?.getAsJsonObject("data")
     }
 
@@ -39,8 +36,7 @@ open class GraphQLQueryService(val url: String, val auth: String? = null, val co
                 .get()
                 .url(HttpUrl.parse(url)?.newBuilder()?.addEncodedQueryParameter("query", URLEncoder.encode(query).replace("%5C",""))?.build()!!)
                 .build()
-        val deferred = CoroutineScope(Dispatchers.Default).async { client.newCall(request).execute() }
-        val response = deferred.await()
+        val response = withContext(CoroutineScope(Dispatchers.Default).coroutineContext) { client.newCall(request).execute() }
         return Gson().fromJson(response.body()?.string(), JsonObject::class.java)?.getAsJsonObject("data")
     }
 
